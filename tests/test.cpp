@@ -34,9 +34,9 @@ TEST_CASE("validating values", "[isValid]") {
 
 // goes over the board and checks if all are correct
 TEST_CASE("generating full board", "[fillBoard]") {
-
     Sudoku game{};
-    game.generateSudoku(5);
+    // pass the difficulty as 0 so there are no empty cells
+    game.generateSudoku(0);
     game.printBoard();
     int currentValue;
     for (size_t x = 0; x < GRID_SIZE; x++) {
@@ -45,5 +45,45 @@ TEST_CASE("generating full board", "[fillBoard]") {
             REQUIRE(currentValue != 0);
             REQUIRE(game.isValid(x, y, currentValue));
         }
+    }
+}
+
+TEST_CASE("seed consistancy") {
+
+    SECTION("same seed produces identical boards") {
+        Sudoku game1{};
+        Sudoku game2{};
+        game1.generateSudoku(10, 123);
+        game2.generateSudoku(10, 123);
+        REQUIRE(game1.board() == game2.board());
+        game1.generateSudoku(10, 321);
+        game2.generateSudoku(10, 321);
+        REQUIRE(game1.board() == game2.board());
+    }
+    SECTION("same seed produces identicaly board after random generation") {
+        Sudoku game1{};
+        Sudoku game2{};
+        game1.generateSudoku(10);
+        game2.generateSudoku(10);
+        REQUIRE(game1.board() != game2.board());
+        game1.generateSudoku(10, 444);
+        game2.generateSudoku(10, 444);
+        REQUIRE(game1.board() == game2.board());
+    }
+}
+
+TEST_CASE("hole punching", "[punchHoles)]") {
+    SECTION("hole amounts match difficulty") {
+        unsigned int difficulty = 10;
+        Sudoku game{};
+        game.generateSudoku(difficulty);
+        BoardType board = game.board();
+        unsigned int emptyValues{};
+        for (size_t col = 0; col < GRID_SIZE; col++) {
+            for (size_t row = 0; row < GRID_SIZE; row++) {
+                if (board[col][row] == 0) emptyValues++;
+            }
+        }
+        REQUIRE(emptyValues == difficulty);
     }
 }

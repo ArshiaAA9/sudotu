@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cstdint>
 #include <numeric>
 #include <print>
 #include <random>
@@ -76,7 +77,7 @@ void Sudoku::generateSudoku(unsigned int difficulty) {
     punchHoles(difficulty);
 }
 
-void Sudoku::generateSudoku(uint32_t seed, unsigned int difficulty) {
+void Sudoku::generateSudoku(unsigned int difficulty, uint32_t seed) {
     m_randEngine.seed(seed);
     m_currentSeed = seed;
     std::print("{}\n", seed);
@@ -127,8 +128,8 @@ void Sudoku::punchHoles(unsigned int difficulty) {
     std::shuffle(indices.begin(), indices.end(), m_randEngine);
 
     unsigned int punchedHoles{};
+
     // possibe values to remove
-    size_t i = 0;
     for (unsigned int index : indices) {
         if (punchedHoles == difficulty) return;
         unsigned int col = index % GRID_SIZE;
@@ -143,17 +144,6 @@ void Sudoku::punchHoles(unsigned int difficulty) {
             punchedHoles++;
         }
     }
-
-    // if (punchedHoles == difficulty) return;
-    // // punch hole
-    // unsigned int currentValue = m_board[col][row];
-    // m_board[col][row] = 0;
-    // // put back the value if not multiple solutions
-    // if (!hasOneSolution()) {
-    //     m_board[col][row] = currentValue;
-    // } else {
-    //     punchedHoles++;
-    // }
 }
 
 bool Sudoku::hasOneSolution() {
@@ -186,8 +176,6 @@ void Sudoku::solveForSolutions(unsigned int col, unsigned int row, unsigned int&
     }
     return;
 }
-
-int Sudoku::genValue() { return m_uniformDist(m_randEngine); }
 
 void Sudoku::clearBoard() {
     for (auto& col : m_board) col.fill(0);

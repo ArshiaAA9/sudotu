@@ -13,15 +13,16 @@ public:
     bool setValue(unsigned int col, unsigned int row, int value);
 
     void generateSudoku(unsigned int difficulty);
-    void generateSudoku(uint32_t seed, unsigned int difficulty);
+    void generateSudoku(unsigned int difficulty, uint32_t seed);
     void clearBoard();
     void printBoard() const;
 
     bool isValid(unsigned int col, unsigned int row, int value) const;
     int readValue(unsigned int col, unsigned row) const;
 
+    inline const BoardType& board() const { return m_board; }
+
 private:
-    int genValue();
     bool fillBoard(unsigned int col, unsigned int row);
     void punchHoles(unsigned int difficulty);
     bool hasOneSolution();

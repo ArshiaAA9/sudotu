@@ -8,6 +8,15 @@ set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
 
 find_package(Catch2 3 REQUIRED)
 
+include(FetchContent)
+FetchContent_Declare(ftxui
+  GIT_REPOSITORY https://github.com/ArthurSonzogni/ftxui
+  GIT_TAG v6.1.9
+  GIT_SHALLOW TRUE
+  FIND_PACKAGE_ARGS NAMES ftxui
+)
+FetchContent_MakeAvailable(ftxui)
+
 list(APPEND CMAKE_MODULE_PATH ${Catch2_DIR})
 
 # ==================== GAME LIBRARY ====================
@@ -28,6 +37,9 @@ add_executable(bin
 
 target_link_libraries(bin PRIVATE
     libSudoku
+    ftxui::screen
+    ftxui::dom
+    ftxui::component
 )
 
 target_compile_options(bin PRIVATE
@@ -44,10 +56,19 @@ add_executable(tests
 target_link_libraries(tests PRIVATE
     Catch2::Catch2WithMain
     libSudoku
+    ftxui::screen
+    ftxui::dom
+    ftxui::component
 )
 
 target_include_directories(tests PRIVATE
     ${SOURCE_DIR}
+)
+
+target_compile_options(tests PRIVATE
+    -Wall
+    -Wextra
+    -Wpedantic
 )
 
 # Auto-discover tests with ctest
