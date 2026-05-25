@@ -29,6 +29,12 @@ add_executable(bin
 target_link_libraries(bin PRIVATE
     libSudoku
 )
+
+target_compile_options(bin PRIVATE
+    -Wall
+    -Wextra
+    -Wpedantic
+)
 # ==================== TESTS ====================
 add_executable(tests
     ${CMAKE_SOURCE_DIR}/tests/test.cpp
@@ -48,3 +54,4 @@ target_include_directories(tests PRIVATE
 include(CTest)
 include(Catch)
 catch_discover_tests(tests)
+
