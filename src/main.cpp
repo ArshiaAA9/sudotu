@@ -6,7 +6,12 @@
 #include "sudoku.hpp"
 #include "tui.hpp"
 
-void play(Sudoku& game) {
+/* TODO:
+ *  run the tui on a seperate thread
+ *
+ * */
+
+void play(Sudoku& game, Tui tui) {
     std::string answer;
     while (true) {
         std::print("Do you want to enter a seed? (y/N): ");
@@ -30,11 +35,13 @@ void play(Sudoku& game) {
                 }
             }
             game.generateSudoku(5, seed);
-            game.printBoard();
+            tui.render(game.board());
+            // game.printBoard();
             return;
         } else if (first == 'n' || answer == "N" || answer.empty()) {
             game.generateSudoku(5); // default seed
-            game.printBoard();
+            tui.render(game.board());
+            // game.printBoard();
             return;
         } else {
             std::println("Please answer 'y' or 'N'.");
@@ -42,13 +49,11 @@ void play(Sudoku& game) {
     }
 }
 
-int main() {
-    Tui tui{};
-    tui.render();
-    Sudoku game{};
+void gameLoop(Sudoku game, Tui tui) {
+
     bool playing = true;
     while (playing) {
-        play(game);
+        play(game, tui);
         std::string answer;
         while (true) {
             std::print("Do you want to play again? (y/N): ");
@@ -66,4 +71,12 @@ int main() {
         }
     }
     std::println("Goodbye!");
+}
+
+int main() {
+    Sudoku game{};
+    game.generateSudoku(6);
+    Tui tui{game.board()};
+    tui.render(game.board());
+    // game.printBoard();
 }
