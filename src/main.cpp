@@ -4,11 +4,10 @@
 #include <string>
 
 #include "sudoku.hpp"
-#include "tui.hpp"
+#include "tui/tui.hpp"
 
 /* TODO:
- *  run the tui on a seperate thread
- *
+ *  run the tui on a seperate thread from board generation
  * */
 
 void play(Sudoku& game, Tui tui) {
@@ -35,12 +34,12 @@ void play(Sudoku& game, Tui tui) {
                 }
             }
             game.generateSudoku(5, seed);
-            tui.render(game.board());
+            // tui.render(game.board());
             // game.printBoard();
             return;
         } else if (first == 'n' || answer == "N" || answer.empty()) {
             game.generateSudoku(5); // default seed
-            tui.render(game.board());
+            // tui.render(game.board());
             // game.printBoard();
             return;
         } else {
@@ -50,7 +49,6 @@ void play(Sudoku& game, Tui tui) {
 }
 
 void gameLoop(Sudoku game, Tui tui) {
-
     bool playing = true;
     while (playing) {
         play(game, tui);
@@ -75,8 +73,15 @@ void gameLoop(Sudoku game, Tui tui) {
 
 int main() {
     Sudoku game{};
-    game.generateSudoku(6);
-    Tui tui{game.board()};
-    tui.render(game.board());
+    game.generateSudoku(39);
+    Tui tui{};
+    // tui.render(game.board());
+    tui.run(game.board());
+    // tui.button();
+    // tui.render(game.board());
     // game.printBoard();
+    std::atexit([] {
+        // FTXUI leaves cursor blinking on exit in Wezterm, reset fixes it
+        system("reset");
+    });
 }

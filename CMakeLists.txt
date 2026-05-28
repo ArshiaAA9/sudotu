@@ -1,3 +1,8 @@
+# NOTE TO SELF:
+# GLOB_RECURSE also picks up child directories
+# GLOB only picks up the selected directory
+
+
 cmake_minimum_required(VERSION 3.16)
 project(sudoku VERSION 1.0.0 LANGUAGES CXX)
 
@@ -13,21 +18,34 @@ FetchContent_Declare(ftxui
   GIT_REPOSITORY https://github.com/ArthurSonzogni/ftxui
   GIT_TAG v6.1.9
   GIT_SHALLOW TRUE
-  FIND_PACKAGE_ARGS NAMES ftxui
+  # FIND_PACKAGE_ARGS NAMES ftxui
 )
 FetchContent_MakeAvailable(ftxui)
 
 list(APPEND CMAKE_MODULE_PATH ${Catch2_DIR})
 
-# ==================== GAME LIBRARY ====================
+# ==================== Suodku library ====================
+file(GLOB SUDOKU_SOURCES CONFIGURE_DEPENDS "${SOURCE_DIR}/*.cpp" "${SOURCE_DIR}/*.c")
+list(REMOVE_ITEM SUDOKU_SOURCES "${SOURCE_DIR}/main.cpp")
 
-file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "${SOURCE_DIR}/*.cpp" "${SOURCE_DIR}/*.c")
-list(REMOVE_ITEM SOURCES "${SOURCE_DIR}/main.cpp")
-
-add_library(libSudoku STATIC ${SOURCES})
+add_library(libSudoku STATIC ${SUDOKU_SOURCES})
 
 target_include_directories(libSudoku PUBLIC
     ${SOURCE_DIR}
+)
+
+# ==================== tui library ====================
+file(GLOB_RECURSE TUI_SOURCES CONFIGURE_DEPENDS "${SOURCE_DIR}/tui/*.cpp")
+add_library(libTui STATIC ${TUI_SOURCES})
+
+target_include_directories(libTui PUBLIC
+    ${SOURCE_DIR}/tui
+)
+
+target_link_libraries(libTui PUBLIC
+    ftxui::screen
+    ftxui::component
+    ftxui::dom
 )
 
 # ==================== MAIN EXECUTABLE ====================
@@ -37,9 +55,7 @@ add_executable(bin
 
 target_link_libraries(bin PRIVATE
     libSudoku
-    ftxui::screen
-    ftxui::dom
-    ftxui::component
+    libTui
 )
 
 target_compile_options(bin PRIVATE

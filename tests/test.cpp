@@ -7,7 +7,7 @@
 
 TEST_CASE("validating values", "[isValid]") {
     Sudoku game{};
-    game.clearBoard();
+    game.clearBoards();
 
     // test
     game.setValue(0, 0, 2);

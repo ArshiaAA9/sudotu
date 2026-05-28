@@ -1,0 +1,3 @@
+CompileFlags:
+  CompilationDatabase: build/
+  Add: [-I/home/arshia/coding/sudoku/build/_deps/ftxui-src/include]
