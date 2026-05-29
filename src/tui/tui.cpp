@@ -142,7 +142,7 @@ ft::Element Tui::createMainDom() {
             ft::hbox({
                 // change these later
                 ft::text("Mistakes: " + std::to_string(m_game.mistakeCount())) | ft::flex,
-                ft::text("Sudoku") | ft::bold | ft::center | ft::flex,
+                ft::text("Sudotu") | ft::bold | ft::center | ft::flex,
                 ft::text("Time: " + m_stopwatch.format()) | ft::align_right | ft::flex,
             }),
             ft::separator(),
