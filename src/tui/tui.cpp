@@ -87,9 +87,9 @@ ft::Element Tui::createGridBox(const BoardType& board, unsigned int startingCol,
 
     constexpr int CELL_WIDTH = 6;
     constexpr int CELL_HEIGHT = 2;
-    constexpr int FILLER_WIDTH = 1;
+    // constexpr int FILLER_WIDTH = 1;
 
-    const ft::Element filler = ft::filler() | size(ft::WIDTH, ft::EQUAL, 4) | size(ft::HEIGHT, ft::EQUAL, 2);
+    // const ft::Element filler = ft::filler() | size(ft::WIDTH, ft::EQUAL, 4) | size(ft::HEIGHT, ft::EQUAL, 2);
 
     for (size_t row = startingRow * 3; row < startingRow * 3 + 3; row++) {
         ft::Elements currentRow;
@@ -97,60 +97,61 @@ ft::Element Tui::createGridBox(const BoardType& board, unsigned int startingCol,
             ft::Element text =
                 (board[col][row] == 0) ? ft::text("  ") : ft::text(" " + std::to_string(board[col][row]) + " ");
             text |= ft::center;
-            text |= ft::size(ft::WIDTH, ft::GREATER_THAN, CELL_WIDTH);
-            text |= ft::size(ft::HEIGHT, ft::GREATER_THAN, CELL_HEIGHT);
+            text |= ft::size(ft::WIDTH, ft::EQUAL, CELL_WIDTH);
+            text |= ft::size(ft::HEIGHT, ft::EQUAL, CELL_HEIGHT);
 
             if (col == m_selectedCol && row == m_selectedRow) text |= ft::bgcolor(ft::Color::Cyan);
 
             currentRow.push_back(text);
 
-            if (col == startingCol * 3 + 2) continue;
-            currentRow.push_back(ft::separatorLight() | color(ft::Color::White));
+            if (col < startingCol * 3 + 2) currentRow.push_back(ft::separatorLight() | color(ft::Color::White));
         }
-
         result.push_back(currentRow);
-        ft::Elements separatorRow;
-        separatorRow.reserve(6);
-        for (int i = 0; i < 5; i++) {
-            separatorRow.push_back(ft::separatorLight() | color(ft::Color::White));
+
+        if (row < startingRow * 3 + 2) {
+            ft::Elements separatorRow;
+            separatorRow.reserve(6);
+            for (int i = 0; i < 5; i++) {
+                separatorRow.push_back(ft::separatorLight() | color(ft::Color::White));
+            }
+            result.push_back(separatorRow);
         }
-        result.push_back(separatorRow);
     }
 
-    return gridbox(result);
+    return ft::gridbox(result);
 }
 
 std::vector<ft::Elements> Tui::fillGridWithGrid(const BoardType& board) {
     std::vector<ft::Elements> result;
 
-    constexpr int CELL_WIDTH = 3;
-    constexpr int CELL_HEIGHT = 1;
-    constexpr int FILLER_WIDTH = 1;
+    constexpr int CELL_WIDTH = 23;
+    constexpr int CELL_HEIGHT = 11;
 
-    const ft::Element filler = ft::filler() | size(ft::HEIGHT, ft::EQUAL, FILLER_WIDTH);
+    // const ft::Element filler = ft::filler() | size(ft::HEIGHT, ft::EQUAL, FILLER_WIDTH);
 
     for (size_t blockRow = 0; blockRow < 3; blockRow++) {
         ft::Elements currentRow;
         for (size_t blockCol = 0; blockCol < 3; blockCol++) {
-            ft::Element currentGrid = createGridBox(board, blockCol, blockRow);
-            // currentGrid |= ft::center;
-            currentGrid |= ft::size(ft::WIDTH, ft::EQUAL, 16);
-            currentGrid |= ft::size(ft::HEIGHT, ft::EQUAL, 8);
+            ft::Element currentBlock = createGridBox(board, blockCol, blockRow);
+            currentBlock |= ft::size(ft::WIDTH, ft::EQUAL, CELL_WIDTH);
+            currentBlock |= ft::size(ft::HEIGHT, ft::EQUAL, CELL_HEIGHT);
+            currentRow.push_back(currentBlock);
 
-            currentRow.push_back(currentGrid);
-            if (blockCol != 2) {
-                currentRow.push_back(ft::hbox({ft::separatorHeavy() | color(ft::Color::White), filler}));
+            if (blockCol < 2) {
+                currentRow.push_back(ft::separatorHeavy() | color(ft::Color::White));
             }
         }
         result.push_back(currentRow);
-        ft::Elements separatorRow;
-        // 11 is the element count 3 rows + 2 filler
-        separatorRow.reserve(10);
-        if (blockRow != 2) {
-            for (int i = 0; i < 5; i++) {
-                separatorRow.push_back(ft::separatorHeavy() | color(ft::Color::White));
+
+        if (blockRow < 2) {
+            ft::Elements separatorRow;
+            separatorRow.reserve(10);
+            if (blockRow != 2) {
+                for (int i = 0; i < 5; i++) {
+                    separatorRow.push_back(ft::separatorHeavy() | color(ft::Color::White));
+                }
+                result.push_back(separatorRow);
             }
-            result.push_back(separatorRow);
         }
     }
     return result;
