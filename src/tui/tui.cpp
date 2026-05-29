@@ -95,14 +95,19 @@ ft::Element Tui::createGridBox(const BoardType& board, unsigned int startingCol,
     for (size_t row = startingRow * 3; row < startingRow * 3 + 3; row++) {
         ft::Elements currentRow;
         for (size_t col = startingCol * 3; col < startingCol * 3 + 3; col++) {
-            ft::Element text =
-                (board[col][row] == 0) ? ft::text("  ") : ft::text(" " + std::to_string(board[col][row]) + " ");
-            text |= ft::color(ft::Color::Black);
+            ft::Element text;
+            if (col == m_selectedCol && row == m_selectedRow) {
+                // selected case
+                text = (board[col][row] == 0) ? ft::text(".") : ft::text(std::to_string(board[col][row]));
+                text |= ft::color(ft::Color::Red);
+
+            } else {
+                text = (board[col][row] == 0) ? ft::text("") : ft::text(std::to_string(board[col][row]));
+                text |= ft::color(ft::Color::Black);
+            }
             text |= ft::center;
             text |= ft::size(ft::WIDTH, ft::EQUAL, CELL_WIDTH);
             text |= ft::size(ft::HEIGHT, ft::EQUAL, CELL_HEIGHT);
-
-            if (col == m_selectedCol && row == m_selectedRow) text |= ft::bgcolor(ft::Color::GrayDark);
 
             currentRow.push_back(text);
 
