@@ -3,10 +3,9 @@
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 
 #include "sudoku.hpp"
-#include "types.hpp"
 
 TEST_CASE("validating values", "[isValid]") {
-    Sudoku game{};
+    Sudoku::Sudoku game{};
     game.clearBoards();
 
     // test
@@ -34,13 +33,13 @@ TEST_CASE("validating values", "[isValid]") {
 
 // goes over the board and checks if all are correct
 TEST_CASE("generating full board", "[fillBoard]") {
-    Sudoku game{};
+    Sudoku::Sudoku game{};
     // pass the difficulty as 0 so there are no empty cells
     game.generateSudoku(0);
     game.printBoard();
     int currentValue;
-    for (size_t x = 0; x < GRID_SIZE; x++) {
-        for (size_t y = 0; y < GRID_SIZE; y++) {
+    for (size_t x = 0; x < Sudoku::GRID_SIZE; x++) {
+        for (size_t y = 0; y < Sudoku::GRID_SIZE; y++) {
             currentValue = game.readValue(x, y);
             REQUIRE(currentValue != 0);
             REQUIRE(game.isValid(x, y, currentValue));
@@ -51,8 +50,8 @@ TEST_CASE("generating full board", "[fillBoard]") {
 TEST_CASE("seed consistancy") {
 
     SECTION("same seed produces identical boards") {
-        Sudoku game1{};
-        Sudoku game2{};
+        Sudoku::Sudoku game1{};
+        Sudoku::Sudoku game2{};
         game1.generateSudoku(10, 123);
         game2.generateSudoku(10, 123);
         REQUIRE(game1.board() == game2.board());
@@ -61,8 +60,8 @@ TEST_CASE("seed consistancy") {
         REQUIRE(game1.board() == game2.board());
     }
     SECTION("same seed produces identicaly board after random generation") {
-        Sudoku game1{};
-        Sudoku game2{};
+        Sudoku::Sudoku game1{};
+        Sudoku::Sudoku game2{};
         game1.generateSudoku(10);
         game2.generateSudoku(10);
         REQUIRE(game1.board() != game2.board());
@@ -75,12 +74,12 @@ TEST_CASE("seed consistancy") {
 TEST_CASE("hole punching", "[punchHoles)]") {
     SECTION("hole amounts match difficulty") {
         unsigned int difficulty = 10;
-        Sudoku game{};
+        Sudoku::Sudoku game{};
         game.generateSudoku(difficulty);
-        BoardType board = game.board();
+        Sudoku::Board board = game.board();
         unsigned int emptyValues{};
-        for (size_t col = 0; col < GRID_SIZE; col++) {
-            for (size_t row = 0; row < GRID_SIZE; row++) {
+        for (size_t col = 0; col < Sudoku::GRID_SIZE; col++) {
+            for (size_t row = 0; row < Sudoku::GRID_SIZE; row++) {
                 if (board[col][row] == 0) emptyValues++;
             }
         }

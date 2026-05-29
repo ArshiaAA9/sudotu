@@ -6,11 +6,20 @@
 #include <array>
 #include <cassert>
 #include <cstdint>
+#include <fstream>
 #include <numeric>
 #include <print>
 #include <random>
 
-#include "types.hpp"
+namespace Sudoku {
+// --- getters ---
+const Board& Sudoku::board() const { return m_board; }
+
+const std::unordered_map<unsigned int, Cell>& Sudoku::mistakes() const { return m_mistakes; }
+
+unsigned int Sudoku::mistakeCount() const { return m_mistakesCount; }
+
+int Sudoku::readValue(unsigned int col, unsigned row) const { return m_board[col][row]; }
 
 bool Sudoku::isInBound(unsigned int col, unsigned int row, unsigned int value) {
     return (col <= 8) && (row <= 8) && (value <= 9);
@@ -24,12 +33,12 @@ void Sudoku::printBoard() const {
             if (m_board[x][y] == 0) std::print("   ");
             else
                 std::print(" {} ", m_board[x][y]);
-            if ((x + 1) % BLOCK_SIZE == 0) {
+            if ((x + 1) % SUBGRID_SIZE == 0) {
                 std::print("|");
             }
         }
         std::print("\n");
-        if ((y + 1) % BLOCK_SIZE == 0) {
+        if ((y + 1) % SUBGRID_SIZE == 0) {
             std::print("+---------+---------+---------+\n");
         }
     }
@@ -39,8 +48,8 @@ void Sudoku::printBoard() const {
 bool Sudoku::isValid(unsigned int col, unsigned int row, int value) const {
     assert((col < GRID_SIZE) && (row < GRID_SIZE) && (value <= 9));
     if (value == 0) return true;
-    int startCol = (col / BLOCK_SIZE) * 3;
-    int startRow = (row / BLOCK_SIZE) * 3;
+    int startCol = (col / SUBGRID_SIZE) * 3;
+    int startRow = (row / SUBGRID_SIZE) * 3;
     // check vertically
     for (size_t y = 0; y < GRID_SIZE; y++) {
         if (value == m_board[col][y] && y != row) return false;
@@ -77,11 +86,14 @@ void Sudoku::generateSudoku(unsigned int difficulty) {
 
     // clear the board from before
     clearBoards();
+
     // generate a new one
     fillBoard(0, 0);
     m_filledBoard = m_board;
+
     // remove some values
     punchHoles(difficulty);
+    m_emptyCells = difficulty;
 }
 
 void Sudoku::generateSudoku(unsigned int difficulty, uint32_t seed) {
@@ -91,9 +103,11 @@ void Sudoku::generateSudoku(unsigned int difficulty, uint32_t seed) {
 
     // clear the board from before
     clearBoards();
+
     // generate a new one
     fillBoard(0, 0);
     m_filledBoard = m_board;
+
     // remove some values
     punchHoles(difficulty);
     m_emptyCells = difficulty;
@@ -191,8 +205,6 @@ void Sudoku::clearBoards() {
     for (auto& col : m_filledBoard) col.fill(0);
 }
 
-int Sudoku::readValue(unsigned int col, unsigned row) const { return m_board[col][row]; }
-
 MoveResult Sudoku::insertValue(unsigned int col, unsigned int row, unsigned int value) {
     assert((col < GRID_SIZE) && (row < GRID_SIZE) && (value <= 9));
     // check if the cell is empty
@@ -214,7 +226,8 @@ MoveResult Sudoku::insertValue(unsigned int col, unsigned int row, unsigned int 
         return MoveResult::SUCCEED;
     } else {
         m_mistakesCount++;
-        m_mistakes.insert(std::make_pair(m_mistakesCount, Mistake(col, row, value)));
+        m_mistakes.insert(std::make_pair(m_mistakesCount, Cell(col, row, value)));
         return MoveResult::MISTAKE;
     }
 }
+} // namespace Sudoku
