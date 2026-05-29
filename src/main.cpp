@@ -75,6 +75,7 @@ int main() {
     Sudoku game{};
     game.generateSudoku(39, 1);
     Tui tui{};
+    // tui.test();
     tui.run(game.board());
     // game.printBoard();
     std::atexit([] {

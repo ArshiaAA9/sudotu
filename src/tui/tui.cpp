@@ -85,28 +85,25 @@ ft::Element Tui::createMainDom(const BoardType& board) {
 ft::Element Tui::createGridBox(const BoardType& board, unsigned int startingCol, unsigned int startingRow) {
     std::vector<ft::Elements> result;
 
-    constexpr int CELL_WIDTH = 4;
+    constexpr int CELL_WIDTH = 6;
     constexpr int CELL_HEIGHT = 2;
-    // constexpr int FILLER_WIDTH = 1;
+    constexpr int FILLER_WIDTH = 1;
 
-    // const ft::Element filler = ft::filler() | size(ft::HEIGHT, ft::EQUAL, FILLER_WIDTH);
+    const ft::Element filler = ft::filler() | size(ft::WIDTH, ft::EQUAL, 4) | size(ft::HEIGHT, ft::EQUAL, 2);
 
     for (size_t row = startingRow * 3; row < startingRow * 3 + 3; row++) {
         ft::Elements currentRow;
         for (size_t col = startingCol * 3; col < startingCol * 3 + 3; col++) {
-            ft::Element text = (board[col][row] == 0) ? ft::text(" ") : ft::text(std::to_string(board[col][row]));
-
+            ft::Element text =
+                (board[col][row] == 0) ? ft::text("  ") : ft::text(" " + std::to_string(board[col][row]) + " ");
+            text |= ft::center;
             text |= ft::size(ft::WIDTH, ft::GREATER_THAN, CELL_WIDTH);
             text |= ft::size(ft::HEIGHT, ft::GREATER_THAN, CELL_HEIGHT);
-            // text |= ft::flex;
-            text |= ft::center;
 
             if (col == m_selectedCol && row == m_selectedRow) text |= ft::bgcolor(ft::Color::Cyan);
-            // text |= ft::borderHeavy;
 
-            // const ft::Element current = hbox(text, filler);
-            // text = hbox(text);
             currentRow.push_back(text);
+
             if (col == startingCol * 3 + 2) continue;
             currentRow.push_back(ft::separatorLight() | color(ft::Color::White));
         }
@@ -114,7 +111,7 @@ ft::Element Tui::createGridBox(const BoardType& board, unsigned int startingCol,
         result.push_back(currentRow);
         ft::Elements separatorRow;
         separatorRow.reserve(6);
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 5; i++) {
             separatorRow.push_back(ft::separatorLight() | color(ft::Color::White));
         }
         result.push_back(separatorRow);

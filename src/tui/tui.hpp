@@ -13,6 +13,42 @@ class Tui {
 public:
     Tui() {}
 
+    void test() {
+        using namespace ftxui;
+        auto cell = [](const char* t) { return text(t) | border; };
+        auto document = //
+            gridbox({
+                {
+                    cell("north-west"),
+                    cell("north"),
+                    cell("north-east"),
+                },
+                {
+                    cell("center-west"),
+                    gridbox({
+                        {
+                            cell("center-north-west"),
+                            cell("center-north-east"),
+                        },
+                        {
+                            cell("center-south-west"),
+                            cell("center-south-east"),
+                        },
+                    }),
+                    cell("center-east"),
+                },
+                {
+                    cell("south-west"),
+                    cell("south"),
+                    cell("south-east"),
+                },
+            });
+        auto screen = Screen::Create(Dimension::Fit(document));
+        Render(screen, document);
+        screen.Print();
+        getchar();
+    }
+
     void run(const BoardType& board);
 
 private:
