@@ -171,12 +171,17 @@ ft::Element Tui::createSubGrid(unsigned int startingCol, unsigned int startingRo
                 (m_board[col][row] == 0) ? (isSelected ? "○" : "") : std::to_string(m_board[col][row]);
 
             ft::Element text = ft::text(cellText);
+            text |= ft::center;
+            text |= ft::size(ft::WIDTH, ft::EQUAL, CELL_WIDTH);
+            text |= ft::size(ft::HEIGHT, ft::EQUAL, CELL_HEIGHT);
+
+            if ((row == m_selected.row) != (col == m_selected.col)) text |= ft::bgcolor(ft::Color::RGB(250, 242, 215));
 
             if (isSelected) {
                 text |= ft::color(ft::Color::Red);
 
             } else if (m_game.readValue(col, row) == m_selected.value && m_selected.value != 0) { // other cells with
-                text |= ft::color(ft::Color::DarkViolet);
+                text |= ft::bgcolor(ft::Color::DarkViolet);
 
             } else if (m_game.isPlayerInput(col, row)) { // player inputted values
                 text |= ft::color(ft::Color::Cyan3);
@@ -184,9 +189,6 @@ ft::Element Tui::createSubGrid(unsigned int startingCol, unsigned int startingRo
             } else {
                 text |= ft::color(ft::Color::Black);
             }
-            text |= ft::center;
-            text |= ft::size(ft::WIDTH, ft::EQUAL, CELL_WIDTH);
-            text |= ft::size(ft::HEIGHT, ft::EQUAL, CELL_HEIGHT);
 
             currentRow.push_back(text);
 
