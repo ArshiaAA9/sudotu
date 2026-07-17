@@ -1,7 +1,6 @@
 # Sudotu
 Sudoku game made for the terminal with the ftxui library in c++.
 
-<img width="1047" height="1039" alt="2026-07-17-233134_hyprshot" src="https://github.com/user-attachments/assets/ba71fc83-4b7f-446d-92b1-11a641ede7e8" />
 <img width="1810" height="1039" alt="2026-07-17-233235_hyprshot" src="https://github.com/user-attachments/assets/d7aa7041-5a1b-462f-a746-1cc0e9013ea7" />
 
 
