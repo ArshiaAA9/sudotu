@@ -9,7 +9,7 @@ project(sudotu VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)  # Critical for clangd
-set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
+set(SOURCE_DIR "${PROJECT_SOURCE_DIR}/src")
 
 find_package(Catch2 3 REQUIRED)
 
@@ -22,7 +22,7 @@ FetchContent_Declare(ftxui
 )
 FetchContent_MakeAvailable(ftxui)
 
-list(APPEND CMAKE_MODULE_PATH ${Catch2_DIR})
+list(APPEND CMAKE_MODULE_PATH "${Catch2_DIR}")
 
 # ==================== Suodku library ====================
 file(GLOB SUDOKU_SOURCES CONFIGURE_DEPENDS "${SOURCE_DIR}/*.cpp" "${SOURCE_DIR}/*.c")
@@ -81,12 +81,17 @@ target_link_libraries(tests PRIVATE
 target_include_directories(tests PRIVATE
     ${SOURCE_DIR}
 )
+add_library(project_warnings INTERFACE)
 
-target_compile_options(tests PRIVATE
-    -Wall
-    -Wextra
-    -Wpedantic
+target_compile_options(project_warnings INTERFACE
+    $<$<CXX_COMPILER_ID:GNU,Clang>:-Wall -Wextra -Wpedantic>
+    $<$<CXX_COMPILER_ID:MSVC>:/W4>
 )
+
+target_link_libraries(libSudoku PRIVATE project_warnings)
+target_link_libraries(libTui PRIVATE project_warnings)
+target_link_libraries(sudotu PRIVATE project_warnings)
+target_link_libraries(tests PRIVATE project_warnings)
 
 # Auto-discover tests with ctest
 include(CTest)

@@ -12,7 +12,7 @@
 namespace ft = ftxui;
 
 // --- constants ---
-constexpr unsigned int DEFAULT_DIFFICULTY = 39;
+constexpr unsigned int DEFAULT_DIFFICULTY = 45;
 // constexpr unsigned int DEFAULT_DIFFICULTY = 5;
 constexpr std::string DEBUG_FILE_PATH = "debug.log";
 
