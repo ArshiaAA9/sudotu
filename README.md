@@ -2,6 +2,7 @@
 Sudoku game made for the terminal with the ftxui library in c++.
 
 <img width="1047" height="1039" alt="2026-07-17-233134_hyprshot" src="https://github.com/user-attachments/assets/ba71fc83-4b7f-446d-92b1-11a641ede7e8" />
+![Uploading 2026-07-17-233235_hyprshot.png…]()
 
 # Installation
 Cloning and building the repo:
