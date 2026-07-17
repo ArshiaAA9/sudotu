@@ -1,7 +1,7 @@
 # Sudotu
 Sudoku game made for the terminal with the ftxui library in c++.
 
-<img width="1573" height="1039" alt="2026-05-30-011710_hyprshot" src="https://github.com/user-attachments/assets/c39195a5-7b1f-45ec-9006-a7692f48fdf3" />
+<img width="1047" height="1039" alt="2026-07-17-233134_hyprshot" src="https://github.com/user-attachments/assets/ba71fc83-4b7f-446d-92b1-11a641ede7e8" />
 
 # Installation
 Cloning and building the repo:
@@ -9,6 +9,7 @@ Cloning and building the repo:
 git clone https://github.com/ArshiaAA9/sudotu
 cd sudotu
 cmake -B build
+cmake --build build
 ```
 Running the game:
 ```
